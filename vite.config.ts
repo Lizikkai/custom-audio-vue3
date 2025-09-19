@@ -3,24 +3,24 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 // 动态导入 unplugin-element-plus 以避免 ESM 问题
-async function createElementPlusPlugin() {
-  try {
-    const { default: ElementPlus } = await import('unplugin-element-plus/vite')
-    return ElementPlus()
-  } catch (error) {
-    console.warn('unplugin-element-plus not available:', error.message)
-    return null
-  }
-}
+// async function createElementPlusPlugin() {
+//   try {
+//     const { default: ElementPlus } = await import('unplugin-element-plus/vite')
+//     return ElementPlus()
+//   } catch (error) {
+//     console.warn('unplugin-element-plus not available:', error.message)
+//     return null
+//   }
+// }
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
-  const elementPlusPlugin = await createElementPlusPlugin()
+  // const elementPlusPlugin = await createElementPlusPlugin()
   const plugins = [vue()]
   
-  if (elementPlusPlugin) {
-    plugins.push(elementPlusPlugin)
-  }
+  // if (elementPlusPlugin) {
+  //   plugins.push(elementPlusPlugin)
+  // }
 
   if (mode === 'lib') {
     // 库构建模式
