@@ -1,14 +1,31 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
-import ElementPlus from 'unplugin-element-plus/vite'
+
+// 动态导入 unplugin-element-plus 以避免 ESM 问题
+async function createElementPlusPlugin() {
+  try {
+    const { default: ElementPlus } = await import('unplugin-element-plus/vite')
+    return ElementPlus()
+  } catch (error) {
+    console.warn('unplugin-element-plus not available:', error.message)
+    return null
+  }
+}
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
+  const elementPlusPlugin = await createElementPlusPlugin()
+  const plugins = [vue()]
+  
+  if (elementPlusPlugin) {
+    plugins.push(elementPlusPlugin)
+  }
+
   if (mode === 'lib') {
     // 库构建模式
     return {
-      plugins: [vue(), ElementPlus()],
+      plugins,
       build: {
         lib: {
           entry: resolve(__dirname, 'src/index.ts'),
@@ -30,7 +47,7 @@ export default defineConfig(({ mode }) => {
   } else {
     // 开发模式
     return {
-      plugins: [vue()],
+      plugins,
       resolve: {
         alias: {
           '@': resolve(__dirname, 'src'),
