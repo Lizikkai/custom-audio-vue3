@@ -1,9 +1,11 @@
 <template>
     <div class="audio">
         <div class="audio-wrap">
-            <div class="audio-wrap-back" @click="go('back')" :class="{ stop: !currentTime }"></div>
-            <div class="audio-wrap-start" @click="handleTogglePlay" :class="{ pause: isPlaying }"></div>
-            <div class="audio-wrap-forward" @click="go('forward')"></div>
+            <slot name="action" :isPlaying="isPlaying">
+                <div class="audio-wrap-back" @click="go('back', 15)" :class="{ stop: !currentTime }"></div>
+                <div class="audio-wrap-start" @click="handleTogglePlay" :class="{ pause: isPlaying }"></div>
+                <div class="audio-wrap-forward" @click="go('forward', 15)"></div>
+            </slot>
         </div>
         <div class="audio-track">
             <div class="audio-track-process" @click="hadnleSeekerForward" @mousedown="handleMouseDown"
@@ -21,7 +23,7 @@
                 <span class="audio-track-time-total">{{ durationTransform }}</span>
             </div>
         </div>
-        <div class="audio-volume" @click="toggleVolumeSlider" ref="volumeRef">
+        <div class="audio-volume" @click="toggleVolumeSlider" ref="volumeRef" v-if="showVolumn">
             <div class="audio-volume-icon" :class="{ 'muted': volume === 0 }"></div>
             <div class="audio-volume-slider" v-show="showVolumeSlider">
                 <div class="audio-volume-slider-track" @click="handleVolumeClick">
@@ -31,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="audio-speed" @click="toggleSpeedDropdown" ref="speedDropdownRef">
+        <div class="audio-speed" @click="toggleSpeedDropdown" ref="speedDropdownRef" v-if="showSpeed">
             <div class="audio-speed-show">
                 {{ `${playbackRate}x` }}
                 <div class="audio-speed-show-arrow" :class="{ 'rotated': showSpeedDropdown }"></div>
@@ -51,11 +53,23 @@
 import { ref, computed, watch, unref, onMounted, onUnmounted } from 'vue'
 import { transformSecondToTime } from '../utils'
 
-defineProps<{
-    /** 音频路径 */
-    audioUrl: string
-}>()
-
+withDefaults(
+    defineProps<{
+        /** 音频路径 */
+        audioUrl: string
+        /** 是否需要显示调节音量 */
+        showVolumn: boolean
+        /** 是否需要显示调节倍速 */
+        showSpeed: boolean
+        /** 倍速 */
+        speedOptions?: number[]
+        /** 缓冲条颜色 */
+        /** 当前播放进度条颜色 */
+    }>(),
+    {
+        speedOptions: () => [0.5, 1, 1.5, 2],
+    }
+)
 
 const isPlaying = ref<boolean>(false)
 const audioFile = ref<HTMLAudioElement>()
@@ -92,9 +106,29 @@ const isVolumeMouseDown = ref<boolean>(false)
 /** 倍速下拉菜单相关 */
 const showSpeedDropdown = ref<boolean>(false)
 const speedDropdownRef = ref<HTMLElement>()
-const speedOptions = [0.5, 1, 1.5, 2]
 
-
+defineExpose({
+    /** 播放 */
+    play() {
+        if (audioFile.value) {
+            audioFile.value.play()
+        }
+    },
+    /** 暂停 */
+    pause() {
+        if (audioFile.value) {
+            audioFile.value.pause()
+        }
+    },
+    /** 快进15秒 */
+    forward(time: number = 15) {
+        go('forward', time)
+    },
+    /** 快退15秒 */
+    back(time: number = 15) {
+        go('back', time)
+    }
+})
 
 onMounted(() => {
     if (audioFile.value) {
@@ -143,16 +177,16 @@ onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
 })
 /** 回退15秒/快进15秒 */
-function go(type: 'back' | 'forward') {
+function go(type: 'back' | 'forward', time: number) {
     if (!duration.value) return
     if (type === 'back') {
         if (!currentTime.value) return
         if (audioFile.value) {
-            audioFile.value.currentTime = audioFile.value.currentTime - 15
+            audioFile.value.currentTime = audioFile.value.currentTime - time
         }
     } else {
         if (audioFile.value) {
-            audioFile.value.currentTime = audioFile.value.currentTime + 15
+            audioFile.value.currentTime = audioFile.value.currentTime + time
         }
     }
     update()
@@ -364,11 +398,6 @@ const handleMouseUp = () => {
     font-family: 'FZLanTingHeiS-R-GB', sans-serif;
     font-size: 12px;
     width: 100%;
-    // height: 64px;
-    // border-radius: 10px;
-    // background: #fff;
-    // box-shadow: 0px 0px 20px 1px rgba(89, 104, 145, 0.2);
-    // padding: 20px 16px;
     display: flex;
     align-items: center;
 

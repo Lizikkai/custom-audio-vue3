@@ -61,7 +61,6 @@
   "dependencies": {
     "@types/node": "^24.5.2",
     "dayjs": "^1.11.18",
-    "element-plus": "^2.11.2",
     "prettier": "^3.6.2"
   }
 }
