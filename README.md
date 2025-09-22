@@ -114,6 +114,9 @@ function handleForward() {
 | showVolumn | 是否显示音量控制 | `boolean` | `false` | ❌ |
 | showSpeed | 是否显示倍速控制 | `boolean` | `false` | ❌ |
 | speedOptions | 可选的倍速选项 | `number[]` | `[0.5, 1, 1.5, 2]` | ❌ |
+| bufferedColor | 缓冲条颜色 | `string` | `transparent` | ❌ |
+| currentTrackColor | 当前播放进度条颜色 | `string` | `#B7D8FF` | ❌ |
+| currentTrackCircleColor | 当前播放进度条的圆点颜色 | `string` | `#387FFF` | ❌ |
 
 ### 插槽
 
