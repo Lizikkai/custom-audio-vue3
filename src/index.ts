@@ -13,7 +13,9 @@ const install = (app: App) => {
 }
 
 // 默认导出
-export default {
+const CustomAudioVue = {
   install,
   CustomAudio
 }
+
+export default CustomAudioVue

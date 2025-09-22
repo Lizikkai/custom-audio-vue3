@@ -1,11 +1,7 @@
-# Custom Audio Vue
-
-一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库。提供了完整的音频播放控制功能，包括播放/暂停、进度控制、音量调节、倍速播放、快进/快退等功能。
-
 ## 📦 安装
 
 ```bash
-npm install custom-audio
+npm install vue3-custom-audio-player
 ```
 
 ### 其它用法
@@ -31,9 +27,8 @@ npm install custom-audio
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import CustomAudio from 'custom-audio'
-import music from './assets/audio.mp3'
-
+import { CustomAudio } from 'vue3-custom-audio-player'
+import 'vue3-custom-audio-player/dist/style.css'
 const audioRef = ref<InstanceType<typeof CustomAudio>>()
 
 // 播放/暂停切换
