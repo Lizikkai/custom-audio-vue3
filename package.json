@@ -1,6 +1,6 @@
 {
   "name": "audio-custom-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库，提供完整的音频播放控制功能",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -26,8 +26,7 @@
     "library",
     "audio",
     "player",
-    "typescript",
-    "音频播放器"
+    "typescript"
   ],
   "author": {
     "name": "Lizikkai",

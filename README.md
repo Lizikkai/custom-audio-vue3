@@ -2,57 +2,13 @@
 
 一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库。提供了完整的音频播放控制功能，包括播放/暂停、进度控制、音量调节、倍速播放、快进/快退等功能。
 
-## ✨ 特性
-
-- 🎵 完整的音频播放控制
-- 🎛️ 音量调节滑块
-- ⚡ 倍速播放选择
-- ⏩ 快进/快退功能（15秒）
-- 🎨 现代化 UI 设计
-- 📱 响应式布局
-- 🔧 TypeScript 支持
-- 🎯 插槽支持，可自定义操作区域
-
 ## 📦 安装
 
 ```bash
 npm install custom-audio
 ```
 
-## 🚀 快速开始
-
-### 基础用法
-
-```vue
-<template>
-  <div class="audio-container">
-    <CustomAudio 
-      :audio-url="audioUrl" 
-      :showVolumn="true" 
-      :showSpeed="true"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import CustomAudio from 'custom-audio'
-import audioFile from './assets/audio.mp3'
-
-const audioUrl = audioFile
-</script>
-
-<style>
-.audio-container {
-  padding: 12px;
-  max-width: 640px;
-  height: 84px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-}
-</style>
-```
-
-### 高级用法（带插槽和方法调用）
+### 其它用法
 
 ```vue
 <template>
@@ -104,8 +60,6 @@ function handleForward() {
 </script>
 ```
 
-## 📋 API 文档
-
 ### Props
 
 | 参数 | 说明 | 类型 | 默认值 | 必填 |
@@ -134,28 +88,6 @@ function handleForward() {
 | pause() | 暂停音频 | - | `void` |
 | forward() | 快进15秒 | - | `void` |
 | back() | 快退15秒 | - | `void` |
-
-## 🛠️ 开发
-
-```bash
-# 克隆项目
-git clone <repository-url>
-
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-
-# 构建库
-npm run build:lib
-
-# 代码检查
-npm run lint
-
-# 代码格式化
-npm run format
-```
 
 ## 📄 License
 
