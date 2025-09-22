@@ -1,5 +1,5 @@
 {
-  "name": "lc-audio",
+  "name": "audio-custom-player",
   "version": "0.0.1",
   "description": "一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库，提供完整的音频播放控制功能",
   "main": "dist/index.js",
