@@ -8,6 +8,12 @@
       </template>
     </CustomAudio>
   </div>
+  <div class="audio-container">
+    <CustomAudio :audio-url="music" showVolumn showSpeed ref="audioRef" />
+  </div>
+  <div class="audio-container">
+    <CustomAudio :audio-url="music" showVolumn showSpeed ref="audioRef" bufferedColor="rgba(255,0,0,0.3)" currentTrackColor="lime" currentTrackCircleColor="lightpink" />
+  </div>
 </template>
 
 <script setup lang="ts">

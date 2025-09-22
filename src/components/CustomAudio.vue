@@ -10,12 +10,11 @@
         <div class="audio-track">
             <div class="audio-track-process" @click="hadnleSeekerForward" @mousedown="handleMouseDown"
                 :class="{ 'is-dragging': isDragging }">
-                <div class="audio-track-process-seeker"
-                    :style="{ width: `${isDragging ? dragProgress : percentComplete}%` }">
-                    <div class="audio-track-process-seeker-circle" v-if="currentTime"
+                <div class="audio-track-process-seeker" :style="{ width: `${isDragging ? dragProgress : percentComplete}%`, backgroundColor: currentTrackColor }">
+                    <div class="audio-track-process-seeker-circle" :style="{ backgroundColor: currentTrackCircleColor }" v-if="currentTime"
                         @mousedown.prevent="handleCircleMouseDown"></div>
                 </div>
-                <div class="audio-track-process-buffered" :style="{ width: `${bufferedComplete}%` }"></div>
+                <div class="audio-track-process-buffered" :style="{ width: `${bufferedComplete}%`, backgroundColor: bufferedColor }"></div>
             </div>
             <div class="audio-track-time">
                 <span>{{ currentTimeTransform }}</span>
@@ -64,7 +63,11 @@ withDefaults(
         /** 倍速 */
         speedOptions?: number[]
         /** 缓冲条颜色 */
+        bufferedColor?: string
         /** 当前播放进度条颜色 */
+        currentTrackColor?: string
+        /** 当前播放进度条的圆点颜色 */
+        currentTrackCircleColor?: string
     }>(),
     {
         speedOptions: () => [0.5, 1, 1.5, 2],
@@ -198,7 +201,7 @@ function handleTogglePlay() {
 
 /** 切换倍速下拉菜单显示 */
 function toggleSpeedDropdown() {
-    if (showSpeedDropdown.value) {
+    if (showVolumeSlider.value) {
         showSpeedDropdown.value = false
     }
     showSpeedDropdown.value = !showSpeedDropdown.value
