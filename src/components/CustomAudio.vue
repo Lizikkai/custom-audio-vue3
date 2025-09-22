@@ -57,9 +57,9 @@ withDefaults(
         /** 音频路径 */
         audioUrl: string
         /** 是否需要显示调节音量 */
-        showVolumn: boolean
+        showVolumn?: boolean
         /** 是否需要显示调节倍速 */
-        showSpeed: boolean
+        showSpeed?: boolean
         /** 倍速 */
         speedOptions?: number[]
         /** 缓冲条颜色 */
@@ -71,6 +71,8 @@ withDefaults(
     }>(),
     {
         speedOptions: () => [0.5, 1, 1.5, 2],
+        showVolumn: true,
+        showSpeed: true
     }
 )
 
