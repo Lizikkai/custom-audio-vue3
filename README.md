@@ -4,7 +4,7 @@
 npm install vue3-custom-audio-player
 ```
 
-### 其它用法
+### 局部注册
 
 ```vue
 <template>
@@ -55,6 +55,19 @@ function handleForward() {
 </script>
 ```
 
+### 全局注册
+```typescript
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import CustomAudioVue from 'vue3-custom-audio-player'
+import 'vue3-custom-audio-player/dist/style.css'
+
+const app = createApp(App)
+app.use(CustomAudioVue)
+app.mount('#app')
+```
+
 ### Props
 
 | 参数 | 说明 | 类型 | 默认值 | 必填 |
@@ -67,13 +80,13 @@ function handleForward() {
 | currentTrackColor | 当前播放进度条颜色 | `string` | `#B7D8FF` | ❌ |
 | currentTrackCircleColor | 当前播放进度条的圆点颜色 | `string` | `#387FFF` | ❌ |
 
-### 插槽
+### Slot
 
 | 插槽名 | 说明 | 参数 |
 |--------|------|------|
 | action | 自定义操作区域 | - |
 
-### 暴露的方法
+### Expose
 
 通过 `ref` 可以调用以下方法：
 
@@ -88,7 +101,7 @@ function handleForward() {
 
 MIT
 
-## 👨‍💻 作者
+## 👨‍💻 Author
 
 **Lizikkai**
 - Email: 1980372249@qq.com
