@@ -42,6 +42,8 @@ export default defineConfig(async ({ mode }) => {
             },
           },
         },
+        // 生成类型声明文件
+        emptyOutDir: true,
       },
     }
   } else {

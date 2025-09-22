@@ -1,7 +1,7 @@
 {
-  "name": "custom-audio",
-  "version": "1.0.0",
-  "description": "A Vue 3 Custom Audio",
+  "name": "lc-audio",
+  "version": "0.0.1",
+  "description": "一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库，提供完整的音频播放控制功能",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build:lib": "vite build --mode lib",
+    "build:lib": "vite build --mode lib && vue-tsc --project tsconfig.build.json",
+    "build:test": "vite build --mode test && vue-tsc --project tsconfig.build.json",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib",
     "format": "prettier --write src/",
@@ -22,7 +23,11 @@
     "vue",
     "vue3",
     "component",
-    "library"
+    "library",
+    "audio",
+    "player",
+    "typescript",
+    "音频播放器"
   ],
   "author": {
     "name": "Lizikkai",

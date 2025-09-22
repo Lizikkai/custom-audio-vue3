@@ -1,18 +1,19 @@
-/**
- * 项目入口文件
- * 用于导出项目的主要组件、工具函数等
- */
+import type { App } from 'vue'
+import CustomAudio from './components/CustomAudio.vue'
 
 // 导出组件
-// export { default as ExampleComponent } from './components/ExampleComponent.vue'
+export { default as CustomAudio } from './components/CustomAudio.vue'
 
 // 导出工具函数
-// export * from './utils'
+export * from './utils'
 
-// 导出类型定义
-// export type * from './types'
+// Vue 插件安装函数
+const install = (app: App) => {
+  app.component('CustomAudio', CustomAudio)
+}
 
 // 默认导出
 export default {
-  // 在这里添加需要默认导出的内容
+  install,
+  CustomAudio
 }
