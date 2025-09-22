@@ -1,6 +1,6 @@
 {
   "name": "vue3-custom-audio-player",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "一个基于 Vue 3 + TypeScript 的自定义音频播放器组件库，提供完整的音频播放控制功能",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -48,7 +48,6 @@
     "eslint-plugin-vue": "^9.28.0",
     "sass": "^1.92.1",
     "typescript": "^4.9.0",
-    "unplugin-element-plus": "^0.10.0",
     "vite": "^4.0.0",
     "vue": "^3.2.47",
     "vue-eslint-parser": "^9.4.3",
