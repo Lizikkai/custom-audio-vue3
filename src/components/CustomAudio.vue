@@ -10,11 +10,13 @@
         <div class="audio-track">
             <div class="audio-track-process" @click="hadnleSeekerForward" @mousedown="handleMouseDown"
                 :class="{ 'is-dragging': isDragging }">
-                <div class="audio-track-process-seeker" :style="{ width: `${isDragging ? dragProgress : percentComplete}%`, backgroundColor: currentTrackColor }">
-                    <div class="audio-track-process-seeker-circle" :style="{ backgroundColor: currentTrackCircleColor }" v-if="currentTime"
-                        @mousedown.prevent="handleCircleMouseDown"></div>
+                <div class="audio-track-process-seeker"
+                    :style="{ width: `${isDragging ? dragProgress : percentComplete}%`, backgroundColor: currentTrackColor }">
+                    <div class="audio-track-process-seeker-circle" :style="{ backgroundColor: currentTrackCircleColor }"
+                        v-if="currentTime" @mousedown.prevent="handleCircleMouseDown"></div>
                 </div>
-                <div class="audio-track-process-buffered" :style="{ width: `${bufferedComplete}%`, backgroundColor: bufferedColor }"></div>
+                <div class="audio-track-process-buffered"
+                    :style="{ width: `${bufferedComplete}%`, backgroundColor: bufferedColor }"></div>
             </div>
             <div class="audio-track-time">
                 <span>{{ currentTimeTransform }}</span>
@@ -52,7 +54,7 @@
 import { ref, computed, watch, unref, onMounted, onUnmounted } from 'vue'
 import { transformSecondToTime } from '../utils'
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         /** 音频路径 */
         audioUrl: string
@@ -141,30 +143,20 @@ onMounted(() => {
         audioFile.value.volume = volume.value / 100
 
         // 监听元数据加载完成事件
-        audioFile.value.addEventListener('loadedmetadata', () => {
-            duration.value = audioFile.value?.duration || 0
-            durationSeconds.value = parseInt(duration.value.toString())
-            durationTransform.value = transformSecondToTime(duration.value)
-            console.log('音频时长:', duration.value, transformSecondToTime(duration.value), durationSeconds.value)
-        })
+        audioFile.value.addEventListener('loadedmetadata', loadedmetadataHandler)
 
         // 需要添加一个监听播放器的ended事件
-        audioFile.value.addEventListener('ended', () => {
-            // 播放结束后，将当前时间重置为0
-            currentTime.value = 0
-            currentTimeSeconds.value = parseInt(currentTime.value.toString())
-            currentTimeTransform.value = transformSecondToTime(currentTime.value)
-        })
+        audioFile.value.addEventListener('ended', endedHandler)
 
         // 监听播放进度更新
         audioFile.value.addEventListener('timeupdate', update)
 
         audioFile.value.addEventListener('pause', () => {
-            isPlaying.value = false
+            handler(false)
         })
 
         audioFile.value.addEventListener('play', () => {
-            isPlaying.value = true
+            handler(true)
         })
 
         // 如果音频已经加载了元数据，直接获取时长
@@ -177,9 +169,65 @@ onMounted(() => {
     document.addEventListener('click', handleClickOutside)
 })
 
+/** 重置音频状态 */
+function resetAudioState() {
+    isPlaying.value = false
+    duration.value = 0
+    durationTransform.value = ''
+    durationSeconds.value = 0
+    currentTime.value = 0
+    currentTimeSeconds.value = 0
+    currentTimeTransform.value = '00:00'
+    buffered.value = 0
+    playbackRate.value = 1
+    isDragging.value = false
+    dragProgress.value = 0
+    volume.value = 100
+    showVolumeSlider.value = false
+    isVolumeMouseDown.value = false
+    showSpeedDropdown.value = false
+
+    // 如果音频正在播放，先暂停
+    if (audioFile.value) {
+        audioFile.value.pause()
+        audioFile.value.currentTime = 0
+        audioFile.value.playbackRate = 1
+    }
+}
+
+const loadedmetadataHandler = () => {
+    duration.value = audioFile.value?.duration || 0
+    durationSeconds.value = parseInt(duration.value.toString())
+    durationTransform.value = transformSecondToTime(duration.value)
+}
+
+const endedHandler = () => {
+    // 播放结束后，将当前时间重置为0
+    currentTime.value = 0
+    currentTimeSeconds.value = parseInt(currentTime.value.toString())
+    currentTimeTransform.value = transformSecondToTime(currentTime.value)
+}
+
+const handler = (type: boolean) => {
+    isPlaying.value = type
+}
+
 // 组件卸载时移除事件监听器
 onUnmounted(() => {
+    if (isDragging.value) {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+        document.body.style.userSelect = ''
+    }
+    if (audioFile.value) {
+        audioFile.value.removeEventListener('loadedmetadata', loadedmetadataHandler)
+        audioFile.value.removeEventListener('timeupdate', update)
+        audioFile.value.removeEventListener('pause', () => handler(false))
+        audioFile.value.removeEventListener('play', () => handler(true))
+        audioFile.value.removeEventListener('ended', endedHandler)
+    }
     document.removeEventListener('click', handleClickOutside)
+    resetAudioState()
 })
 /** 回退15秒/快进15秒 */
 function go(type: 'back' | 'forward', time: number) {
@@ -198,7 +246,8 @@ function go(type: 'back' | 'forward', time: number) {
 }
 function handleTogglePlay() {
     if (!duration.value) return
-    isPlaying.value = !isPlaying.value
+    let play = !isPlaying.value
+    handler(play)
 }
 
 /** 切换倍速下拉菜单显示 */
@@ -314,7 +363,17 @@ function update() {
     currentTime.value = audioFile.value?.currentTime || 0
     currentTimeSeconds.value = parseInt(currentTime.value.toString())
     currentTimeTransform.value = transformSecondToTime(currentTime.value)
-    buffered.value = audioFile.value?.buffered?.end(0) || 0
+    // 安全获取缓冲进度，避免 IndexSizeError
+    try {
+        if (audioFile.value?.buffered && audioFile.value.buffered.length > 0) {
+            buffered.value = audioFile.value.buffered.end(0)
+        } else {
+            buffered.value = 0
+        }
+    } catch (error) {
+        console.warn('获取音频缓冲进度时出错:', error)
+        buffered.value = 0
+    }
 }
 
 /** 点击进度条跳转 */
@@ -330,7 +389,7 @@ function hadnleSeekerForward(e: MouseEvent) {
         // 设置音频播放位置
         const targetTime = progressPercent * duration.value
         audioFile.value.currentTime = targetTime
-        isPlaying.value = true
+        handler(true)
     }
 }
 
@@ -394,6 +453,13 @@ const handleMouseUp = () => {
     // 恢复文本选择
     document.body.style.userSelect = ''
 }
+
+// 监听 audioUrl 变化，重置状态
+watch(() => props.audioUrl, (newUrl, oldUrl) => {
+    if (newUrl !== oldUrl) {
+        resetAudioState()
+    }
+}, { immediate: false })
 
 
 </script>
