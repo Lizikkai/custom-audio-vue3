@@ -9,10 +9,10 @@
     </CustomAudio>
   </div>
   <div class="audio-container">
-    <CustomAudio :audio-url="music" showVolumn showSpeed ref="audioRef" />
+    <CustomAudio :audio-url="music" showVolumn showSpeed />
   </div>
   <div class="audio-container">
-    <CustomAudio :audio-url="music" showVolumn showSpeed ref="audioRef" bufferedColor="rgba(255,0,0,0.3)" currentTrackColor="lime" currentTrackCircleColor="lightpink" />
+    <CustomAudio :audio-url="music" showVolumn showSpeed bufferedColor="rgba(255,0,0,0.3)" currentTrackColor="lime" currentTrackCircleColor="lightpink" />
   </div>
 </template>
 
